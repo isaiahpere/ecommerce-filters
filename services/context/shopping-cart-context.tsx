@@ -1,73 +1,73 @@
 "use client";
+
 import {
-  Dispatch,
-  createContext,
   useContext,
+  createContext,
   useEffect,
   useReducer,
+  Dispatch,
 } from "react";
 import { ProductType } from "@/app/types";
 
-// TYPES
-export interface IAppState {
+// State Types
+interface IState {
   products: ProductType[];
 }
-
-export const initialState: IAppState = {
+const initialState: IState = {
   products: [],
 };
 
-// CONTEXT TYPES - STATE & ACTION
-export enum ActionType {
-  FETCH_PRODUCT = "FETCH_PRODUCT",
+// Action Types
+enum ActionType {
+  FETCH_PRODUCTS = "FETCH_PRODUCTS",
 }
-export type IAction = {
+interface IAction {
   type: ActionType;
   payload?: ProductType[];
-};
-export interface IAppContext {
-  state: IAppState;
-  dispatch: Dispatch<IAction>;
 }
 
-// CREATE CONTEXT
-const ShoppingCartContext = createContext<IAppContext>({
+// Context Type
+interface IContext {
+  state: IState;
+  dispatch: Dispatch<IAction>;
+}
+const ShoppingCartContext = createContext<IContext>({
   state: {
     products: [],
   },
   dispatch: () => {},
 });
 
-/**
- * Reducer function should simply digest the action payload and return a new state object
- */
-const productsReducer = (state: IAppState, action: IAction) => {
+// Reducer
+const ShoppingCartReducer = (state: IState, action: IAction) => {
   switch (action.type) {
-    case ActionType.FETCH_PRODUCT: {
+    case ActionType.FETCH_PRODUCTS:
       if (action.payload) {
-        state.products = [...action.payload];
+        state.products = action.payload;
       }
-      return {
-        ...state,
-      };
-    }
+      return state;
     default:
-      return {
-        ...state,
-      };
+      return state;
   }
 };
 
+// Context Provider
 const ShoppingCartContextProvider = ({ children }: any) => {
-  const [state, dispatch] = useReducer(
-    productsReducer,
-    initialState as IAppState
-  );
+  const [state, dispatch] = useReducer(ShoppingCartReducer, initialState);
+
   const fetchProducts = async () => {
-    let res = await fetch("/products.json");
-    let data = await res.json();
-    if (data && data.products) {
-      dispatch({ type: ActionType.FETCH_PRODUCT, payload: data.products });
+    try {
+      let res = await fetch("/products.json");
+      let data = await res.json();
+      if (!data || !data.products) {
+        throw new Error("AGAINN_SOMTEHING_WENT_WRONG");
+      }
+      dispatch({
+        type: ActionType.FETCH_PRODUCTS,
+        payload: data.products,
+      });
+    } catch (error) {
+      console.error("OH_NO_AHHH_SOMETHING_WENT_WRONG", error);
     }
   };
 
@@ -75,7 +75,7 @@ const ShoppingCartContextProvider = ({ children }: any) => {
     fetchProducts();
   }, []);
 
-  const value = { state, dispatch };
+  let value = { state, dispatch };
   return (
     <ShoppingCartContext.Provider value={value}>
       {children}
