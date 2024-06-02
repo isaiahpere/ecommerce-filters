@@ -3,7 +3,6 @@ import {
   Dispatch,
   FC,
   PropsWithChildren,
-  ReactNode,
   createContext,
   useContext,
   useEffect,
@@ -12,53 +11,44 @@ import {
 
 import { ProductType } from "@/app/types";
 
-// we get both state & dispatch from context
-// state => products
-// dispatch => state, payload
-
-// reducer will take both the state & action
-// state => products
-// action => type, payload
-
-// State Type
+//### State Type
 interface IState {
   products: ProductType[];
 }
-const initialState: IState = {
+const intialState = {
   products: [],
 };
 
-// Action Types
+//### Action Types
 enum ActionType {
   FETCH_PRODUCTS = "FETCH_PRODUCTS",
 }
 interface IAction {
-  type: ActionType;
+  type: ActionType.FETCH_PRODUCTS;
   payload?: IState;
 }
 
-// Context Type
+//#### Context Types
 interface IContext {
   state: IState;
   dispatch: Dispatch<IAction>;
 }
 
-// ShoppingCartReducer
+// (REDUCER) - Shopping Cart Reducer
 const ShoppingCartReducer = (state: IState, action: IAction) => {
   switch (action.type) {
     case ActionType.FETCH_PRODUCTS:
-      if (action?.payload?.products) {
-        state.products = action.payload.products;
-      }
-      return state;
-
+      return {
+        ...state,
+        products: action.payload?.products ?? state.products,
+      };
     default:
-      console.log("YOU HIT SHOPPING CART REDUCER DEFAULT");
+      console.log("---- YOU HIT DEFAULT REDUCER ACTION ----");
       return state;
   }
 };
 
-//create Context
+// (CONTEXT) - Shopping Cart Context
 const ShoppingCartContext = createContext<IContext>({
   state: {
     products: [],
@@ -66,30 +56,33 @@ const ShoppingCartContext = createContext<IContext>({
   dispatch: () => {},
 });
 
-// Context Provider
+// (CONTEXT_PROVIDER) - Shopping Cart Context Provider
 const ShoppingCartContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [state, dispatch] = useReducer(ShoppingCartReducer, initialState);
+  const [state, dispatch] = useReducer(ShoppingCartReducer, { products: [] });
 
-  // initial fetching of products
-  const initialProductsFetch = async () => {
+  // Initial Products Fetch
+  const fetchProducts = async () => {
     try {
       let res = await fetch("/products.json");
       let data = await res.json();
+
       if (!data || !data.products) {
-        throw new Error("FAILED TO FETCH PRODUCTS");
+        throw new Error("[PRODCUTS_FETCHING_FAILED");
       }
       dispatch({
         type: ActionType.FETCH_PRODUCTS,
         payload: { products: data.products },
       });
     } catch (error) {
-      console.error("There is an error with inital fetch", error);
+      console.error("[FAILED_TO_FETCH_PRODUCTS]", error);
     }
   };
 
   useEffect(() => {
-    initialProductsFetch();
+    fetchProducts();
   }, []);
+
+  if (!state.products) return;
 
   let value = { state, dispatch };
   return (
@@ -99,12 +92,9 @@ const ShoppingCartContextProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
+// (USE_CONTEXT_HOOK)
 const useShoppingCartContext = () => {
   return useContext(ShoppingCartContext);
 };
 
-export {
-  ShoppingCartContext,
-  ShoppingCartContextProvider,
-  useShoppingCartContext,
-};
+export { ShoppingCartContextProvider, useShoppingCartContext };

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
-import { ShoppingCartContextProvider } from "@/services/context/shopping-cart-context";
+import { ShoppingCartContextProvider } from "@/services/context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +16,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log("##### SERVER LAYOUT ####");
   return (
     <html lang="en">
       <body className={inter.className}>
