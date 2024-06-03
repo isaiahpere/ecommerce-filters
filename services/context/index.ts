@@ -2,9 +2,13 @@ import {
   ShoppingCartContextProvider,
   useShoppingCartContext,
 } from "./shopping-cart-context";
+import { FiltersContextProvider, useFiltersContext } from "./filters-context";
 
 export {
-  // ab testing variation assignments via VWO SDK
+  // Products Context
   ShoppingCartContextProvider,
   useShoppingCartContext,
+  // Filters Context
+  FiltersContextProvider,
+  useFiltersContext,
 };

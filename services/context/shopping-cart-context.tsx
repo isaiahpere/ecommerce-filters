@@ -23,9 +23,16 @@ const intialState = {
 enum ActionType {
   FETCH_PRODUCTS = "FETCH_PRODUCTS",
 }
+enum FiltersTypeAction {
+  SORT_BY_LOWEST = "SORT_BY_LOWEST",
+}
 interface IAction {
   type: ActionType.FETCH_PRODUCTS;
   payload?: IState;
+}
+
+interface IFilterAction {
+  type: FiltersTypeAction;
 }
 
 //#### Context Types
