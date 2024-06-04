@@ -3,7 +3,6 @@ import Image from "next/image";
 import { ProductType } from "@/app/types";
 import React, { useMemo } from "react";
 import { useFiltersContext } from "@/services/context";
-import { ActionType } from "@/services/context/filters-context";
 
 interface ProductsProps {
   products: ProductType[];

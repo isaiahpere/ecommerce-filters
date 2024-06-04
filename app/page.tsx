@@ -2,12 +2,12 @@
 
 import Filters from "@/components/filters";
 import Products from "@/components/products/products";
-import { useShoppingCartContext } from "@/services/context";
+import { useProductsContext } from "@/services/context";
 
 const Home = () => {
   const {
     state: { products },
-  } = useShoppingCartContext();
+  } = useProductsContext();
 
   // Loading Products Message
   if (!products.length || products.length <= 0) {

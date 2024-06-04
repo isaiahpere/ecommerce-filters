@@ -10,29 +10,25 @@ import {
 } from "react";
 
 import { ProductType } from "@/app/types";
+import Products from "@/components/products/products";
 
 //### State Type
 interface IState {
   products: ProductType[];
 }
-const intialState = {
-  products: [],
-};
 
 //### Action Types
 enum ActionType {
   FETCH_PRODUCTS = "FETCH_PRODUCTS",
 }
-enum FiltersTypeAction {
-  SORT_BY_LOWEST = "SORT_BY_LOWEST",
-}
-interface IAction {
-  type: ActionType.FETCH_PRODUCTS;
-  payload?: IState;
+
+interface IPayloadState {
+  products: ProductType[];
 }
 
-interface IFilterAction {
-  type: FiltersTypeAction;
+interface IAction {
+  type: ActionType;
+  payload?: IPayloadState;
 }
 
 //#### Context Types
@@ -41,8 +37,8 @@ interface IContext {
   dispatch: Dispatch<IAction>;
 }
 
-// (REDUCER) - Shopping Cart Reducer
-const ShoppingCartReducer = (state: IState, action: IAction) => {
+// (REDUCER) - Products Reducer
+const ProductsReducer = (state: IState, action: IAction) => {
   switch (action.type) {
     case ActionType.FETCH_PRODUCTS:
       return {
@@ -55,17 +51,19 @@ const ShoppingCartReducer = (state: IState, action: IAction) => {
   }
 };
 
-// (CONTEXT) - Shopping Cart Context
-const ShoppingCartContext = createContext<IContext>({
+// (CONTEXT) - Products Context
+const ProductsContext = createContext<IContext>({
   state: {
     products: [],
   },
   dispatch: () => {},
 });
 
-// (CONTEXT_PROVIDER) - Shopping Cart Context Provider
-const ShoppingCartContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [state, dispatch] = useReducer(ShoppingCartReducer, { products: [] });
+// (CONTEXT_PROVIDER) - Products Context Provider
+const ProductsContextProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [state, dispatch] = useReducer(ProductsReducer, {
+    products: [],
+  });
 
   // Initial Products Fetch
   const fetchProducts = async () => {
@@ -93,15 +91,15 @@ const ShoppingCartContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   let value = { state, dispatch };
   return (
-    <ShoppingCartContext.Provider value={value}>
+    <ProductsContext.Provider value={value}>
       {children}
-    </ShoppingCartContext.Provider>
+    </ProductsContext.Provider>
   );
 };
 
 // (USE_CONTEXT_HOOK)
-const useShoppingCartContext = () => {
-  return useContext(ShoppingCartContext);
+const useProductsContext = () => {
+  return useContext(ProductsContext);
 };
 
-export { ShoppingCartContextProvider, useShoppingCartContext };
+export { ProductsContextProvider, useProductsContext };

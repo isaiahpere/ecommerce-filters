@@ -1,13 +1,13 @@
 import {
-  ShoppingCartContextProvider,
-  useShoppingCartContext,
-} from "./shopping-cart-context";
+  ProductsContextProvider,
+  useProductsContext,
+} from "./products-context";
 import { FiltersContextProvider, useFiltersContext } from "./filters-context";
 
 export {
   // Products Context
-  ShoppingCartContextProvider,
-  useShoppingCartContext,
+  ProductsContextProvider,
+  useProductsContext,
   // Filters Context
   FiltersContextProvider,
   useFiltersContext,

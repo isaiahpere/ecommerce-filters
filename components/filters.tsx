@@ -71,7 +71,7 @@ const Filters = () => {
         onClick={() => {
           dispatch({ type: ActionType.CLEAR_FILTERS });
         }}
-        className="mt-4 w-1/2 bg-lime-300 py-1 rounded-lg hover:bg-lime-600 transition"
+        className=" mt-4 mr-auto w-auto bg-lime-300 py-2 px-6 rounded-lg hover:bg-lime-600 transition"
       >
         Clear Filters
       </button>

@@ -3,6 +3,7 @@ import React from "react";
 
 import { useFiltersContext } from "@/services/context";
 import { ActionType } from "@/services/context/filters-context";
+import Link from "next/link";
 
 const Navbar = () => {
   const {
@@ -12,7 +13,9 @@ const Navbar = () => {
 
   return (
     <nav className="h-5 flex items-center justify-between p-6">
-      <h2 className="text-2xl font-mono">Ecommerce Store</h2>
+      <Link href={"/"}>
+        <h2 className="text-2xl font-mono">Ecommerce Store</h2>
+      </Link>
       <input
         type="text"
         placeholder="Search for product..."
@@ -25,6 +28,12 @@ const Navbar = () => {
           });
         }}
       />
+      <Link
+        className="px-4 py-2 bg-slate-500 text-white rounded-md "
+        href={"/cart"}
+      >
+        Cart (0)
+      </Link>
     </nav>
   );
 };
