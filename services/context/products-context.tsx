@@ -22,13 +22,9 @@ enum ActionType {
   FETCH_PRODUCTS = "FETCH_PRODUCTS",
 }
 
-interface IPayloadState {
-  products: ProductType[];
-}
-
 interface IAction {
   type: ActionType;
-  payload?: IPayloadState;
+  payload?: IState;
 }
 
 //#### Context Types
