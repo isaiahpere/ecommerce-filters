@@ -1,17 +1,23 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useFiltersContext } from "@/services/context";
 import { ActionType } from "@/services/context/filters-context";
+import { useRouter, useSearchParams } from "next/navigation";
+
+const filterMap: any = {
+  sort: ActionType.SORT_BY_PRICE,
+  byStock: ActionType.FILTER_BY_STOCK,
+  searchQuery: ActionType.FILTER_BY_SEARCH,
+  byRating: ActionType.FILTER_BY_RATING,
+};
 
 const Filters = () => {
-  const { state, dispatch } = useFiltersContext();
-  const { byStock, byRating, searchQuery, sort } = state;
-
-  console.log(state);
+  const { state, dispatch } = useFiltersContext(); // filter context
+  const { byStock, sort } = state; // destruct state
 
   return (
-    <aside className="flex flex-col min-w-56 gap-2 mr-4">
+    <aside className="flex flex-col min-w-44 gap-2 mr-4">
       <span className="font-bold">Filter Products</span>
       <span>
         <input

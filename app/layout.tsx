@@ -20,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
         <ShoppingCartContextProvider>
-          <FiltersContextProvider>{children}</FiltersContextProvider>
+          <FiltersContextProvider>
+            <Navbar />
+            {children}
+          </FiltersContextProvider>
         </ShoppingCartContextProvider>
       </body>
     </html>
