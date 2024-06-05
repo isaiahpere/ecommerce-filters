@@ -1,15 +1,22 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 
 import { useFiltersContext } from "@/services/context";
 import { ActionType } from "@/services/context/filters-context";
-import Link from "next/link";
+import { useCartContext } from "@/services/context";
 
 const Navbar = () => {
+  // Filter Context
   const {
     state: { searchQuery },
     dispatch,
   } = useFiltersContext();
+
+  // CartContext
+  const {
+    state: { cart },
+  } = useCartContext();
 
   return (
     <nav className="h-5 flex items-center justify-between p-6">
@@ -32,7 +39,7 @@ const Navbar = () => {
         className="px-4 py-2 bg-slate-500 text-white rounded-md "
         href={"/cart"}
       >
-        Cart (0)
+        {`Cart (${cart.length > 0 ? cart.length : 0})`}
       </Link>
     </nav>
   );
