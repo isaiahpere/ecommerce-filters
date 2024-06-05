@@ -1,79 +1,99 @@
 "use client";
 import { ProductType } from "@/app/types";
-import { Dispatch, createContext, useReducer } from "react";
+import {
+  Dispatch,
+  FC,
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useReducer,
+} from "react";
 
-// ### State Type
+// ### STATE TYPES
 interface ICartItem {
-  product: ProductType | null;
+  product: ProductType;
   qty: number;
 }
 interface ICartState {
   cart: ICartItem[];
 }
-const initialCartState = {
-  product: {},
-  qty: 0,
+const initialState: ICartState = {
+  cart: [],
 };
 
-// ### Action Type
-enum CartActionType {
-  ADD_TO_CART = "ADD_TO_CART",
-  REMOVE_FROM_CART = "REMOVE_FROM_CART",
+// ### ACTION TYPES
+export enum CartActionType {
+  ADD_ITEM = "ADD_ITEM",
+  REMOVE_ITEM = "REMOVE_ITEM",
+  CHANGE_CART_QTY = "CHANGE_CART_QTY",
   CLEAR_CART = "CLEAR_CART",
 }
-
-interface ICartAction {
+interface IAction {
   type: CartActionType;
-  payload?: ICartItem;
+  payload: ICartItem;
 }
 
-// ### Context Type
+// ### CONTEXT TYPE
 interface IContext {
-  state: ICartState[];
-  dispatch: Dispatch<ICartAction>;
+  state: ICartState;
+  dispatch: Dispatch<IAction>;
 }
 
-// (REDUCER) - Cart Reducer
-const CartReducer = (state: ICartState, action: ICartAction) => {
+// (REDUCER)
+const CartReducer = (state: ICartState, action: IAction) => {
   switch (action.type) {
-    case CartActionType.ADD_TO_CART:
-      // if no item return
-      if (!action.payload?.product || !action.payload.qty) return;
-      let payload = action.payload;
+    case CartActionType.ADD_ITEM:
+      let paylaod = action.payload;
+      if (!paylaod.product || !paylaod.qty) return state;
 
-      // check if item exist
-      let existingItemIndex = state.cart.findIndex(
-        (item) => item.product?.id === payload.product?.id
+      let existingItem = state.cart.find(
+        (item) => item.product.id === paylaod.product.id
       );
 
-      // if exist - only update qty
-      if (existingItemIndex >= 0) {
-        let updatedCart = state.cart.map((item) => {
-          if (item.product?.id === payload.product?.id) {
-            item.qty += payload.qty;
-          }
-          return item;
-        });
-        return {
-          ...state,
-          cart: updatedCart,
-        };
+      if (existingItem) {
+        let updatedCart = state.cart.map((item) =>
+          item.product.id === paylaod.product.id
+            ? { ...item, qty: item.qty + paylaod.qty }
+            : item
+        );
+
+        return { ...state, cart: [...updatedCart] };
       } else {
-        return {
-          ...state,
-          cart: [...state.cart, payload],
-        };
+        return { ...state, cart: [...state.cart, paylaod] };
       }
+    case CartActionType.REMOVE_ITEM:
+      let removeItem = action.payload;
+      if (!removeItem.product || !removeItem.qty) return state;
 
-    //
-
+      let updatedCart = state.cart.filter(
+        (item) => item.product.id !== removeItem.product.id
+      );
+      return { ...state, cart: [...updatedCart] };
+    case CartActionType.CLEAR_CART:
+      return { ...state, cart: [] };
     default:
       return state;
   }
 };
 
-// (CONTEXT) - Cart Context
+// (CONTEXT)
 const CartContext = createContext<IContext>({
-  state: [],
+  state: { cart: [] },
   dispatch: () => {},
 });
+
+// (PROVIDER)
+const CartContextProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [state, dispatch] = useReducer(CartReducer, { cart: [] });
+
+  let value = { state, dispatch };
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+};
+
+// (HOOK)
+const useCartContext = () => {
+  return useContext(CartContext);
+};
+
+// (EXPORTS)
+export { CartContextProvider, useCartContext };

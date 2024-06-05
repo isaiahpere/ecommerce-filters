@@ -3,6 +3,7 @@ import {
   useProductsContext,
 } from "./products-context";
 import { FiltersContextProvider, useFiltersContext } from "./filters-context";
+import { CartContextProvider, useCartContext } from "./cart-context";
 
 export {
   // Products Context
@@ -11,4 +12,7 @@ export {
   // Filters Context
   FiltersContextProvider,
   useFiltersContext,
+  // CartContext
+  CartContextProvider,
+  useCartContext,
 };

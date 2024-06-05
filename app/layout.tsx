@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import { ProductsContextProvider } from "@/services/context";
 import { FiltersContextProvider } from "@/services/context";
+import { CartContextProvider } from "@/services/context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,12 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ProductsContextProvider>
-          <FiltersContextProvider>
-            <Navbar />
-            {children}
-          </FiltersContextProvider>
-        </ProductsContextProvider>
+        <CartContextProvider>
+          <ProductsContextProvider>
+            <FiltersContextProvider>
+              <Navbar />
+              {children}
+            </FiltersContextProvider>
+          </ProductsContextProvider>
+        </CartContextProvider>
       </body>
     </html>
   );
