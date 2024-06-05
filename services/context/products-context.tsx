@@ -10,7 +10,6 @@ import {
 } from "react";
 
 import { ProductType } from "@/app/types";
-import Products from "@/components/products/products";
 
 //### State Type
 interface IState {

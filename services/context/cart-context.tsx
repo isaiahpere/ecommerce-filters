@@ -17,9 +17,6 @@ interface ICartItem {
 interface ICartState {
   cart: ICartItem[];
 }
-const initialState: ICartState = {
-  cart: [],
-};
 
 // ### ACTION TYPES
 export enum CartActionType {
